@@ -1,0 +1,586 @@
+$homeurl="https://www.marks4sure.com";$suffix=".html";function validate(){var pass=$("#password").val();var c_pass=$("#confirm_pass").val();if(pass===c_pass){return true;}else{alert("Password Doesnt Match");return false;}}
+
+
+
+$(function(){$(document).delegate(".add_cart","click",function(){
+       $id=$(this).data("id");
+      // $type= $(this).data("type");
+       $type= $(this).data("product");
+	   $dur= $(this).data("duration");
+//    $type=$('input[type=radio][name=optradio]:checked').attr('id');
+//	$dur=$('input[type=radio][name=optradio]:checked').attr('data-duration')
+
+       $url=$(this).data("url");
+		//       alert($url);
+       //debugger;
+     //var $form = $(this);
+
+           $.ajax({
+            type: "POST",
+            url: $url,
+            data: {id:$id,type:$type,dur:$dur} ,
+            dataType: "json",
+            traditional: true,
+
+
+
+            
+
+
+
+            success: function (response) {
+
+
+
+                //alert(response.status);
+
+
+
+                //debugger;
+
+
+
+//                
+
+
+
+                if (response.status === "ok") {
+
+
+
+                   //debugger;
+
+
+
+                    //alert(response.sess);
+
+
+
+                
+
+
+
+                  
+
+
+
+                  window.location=response.url;
+
+
+
+                    
+
+
+
+                }
+
+
+
+                if(response.status === "error") {
+
+
+
+                   //debugger;
+
+
+
+                    //alert;
+
+
+
+                
+
+
+
+                   
+
+
+
+                    //window.location=response.url;
+
+
+
+                    
+
+
+
+                }
+
+
+
+                
+
+
+
+               
+
+
+
+            },
+
+
+
+            error: function (response) {
+
+
+
+                //debugger;
+
+
+
+                alert(response);
+
+
+
+            }
+
+
+
+        });
+
+
+
+       
+
+
+
+       
+
+
+
+       
+
+
+
+       
+
+
+
+   });
+
+
+
+/*	$(document).delegate(".showButton", "click", function() {
+
+
+
+        $id = $(this).data("qid");
+
+		alert($id);
+
+
+
+    }); */
+
+
+
+
+
+$(document).delegate(".add_lab_cart","click",function(){
+
+	$id=$(this).data("id");
+
+	// $type= $(this).data("type");
+
+	$type= $(this).data("product");
+
+	$dur= $(this).data("duration");
+
+	$url=$(this).data("url");
+
+
+
+	$.ajax({
+
+		type: "POST",
+
+		url: $url,
+
+		data: {id:$id,type:$type,dur:$dur} ,
+
+		dataType: "json",
+
+		traditional: true,
+
+
+
+		success: function (response) {
+
+			if (response.status === "ok") {
+
+				window.location=response.url;
+
+			}
+
+
+
+			if(response.status === "error") {
+
+
+
+			}
+
+		},
+
+
+
+		error: function (response) {
+
+			//debugger;
+
+			alert(response);
+
+		}
+
+	});
+
+   });
+
+
+
+$(document).delegate(".subscribe","click",function(){$email=$("#email").val();$action=$("#action").val();$url=$homeurl+"/main/default/newsletter"+$suffix;var $form=$(this);$.ajax({type:"POST",url:$url,data:{email:$email,action:$action},dataType:"json",traditional:true,success:function(response){if(response.status==="ok"){$('#newslettermsg').html(response.msg);$("#newsModal").modal('show');}if(response.status==="error"){}},error:function(response){alert(response);}});});
+
+
+
+
+
+
+
+$(document).delegate(".delete_cart","click",function(){$id=$(this).data("id");$url=$(this).data("url");$.ajax({type:"POST",url:$url,data:{id:$id},dataType:"json",traditional:true,success:function(response){if(response.status==="ok"){window.location=response.url;}if(response.status==="error"){}},error:function(response){alert(response);}});});
+
+
+
+
+
+$(document).delegate(".apply_coupon", "click", function() {
+
+
+
+    $code = $("#coupon").val();
+
+    $url = $homeurl + "/main/cart/apply_coupon" + $suffix;
+	$rturl = $(this).data("rturl");
+
+    $.ajax({
+
+        type: "POST",
+
+        url: $url,
+
+        data: {
+
+            code: $code,rturl:$rturl
+
+        },
+
+        dataType: "json",
+
+        traditional: true,
+
+        success: function(response) {
+
+            if (response.status === "ok") {
+
+                window.location = response.url;
+
+            }
+
+            if (response.status === "error") {}
+
+        },
+
+        error: function(response) {
+
+
+
+            alert(response);
+
+        }
+
+    });
+
+});
+
+
+
+$(document).delegate(".update_qty","click",function(){var $myid='#txtqty'+$(this).data("counter");$qty=$($myid).val();$id=$(this).data("id");$url=$homeurl+"/main/cart/update_qty"+$suffix;var $form=$(this);$.ajax({type:"POST",url:$url,data:{qty:$qty,id:$id},dataType:"json",traditional:true,success:function(response){if(response.status==="ok"){$subtotal=''+response.subtotal+'';$('#sub_total-'+$id).html($subtotal);$('#grandtotal').html(response.grandtotal);$('#totalsubTotal').html(response.totalsubTotal);$('#mydiscount').html(response.discount);$('#grandtotal').html(response.totalgrandTotal);}if(response.status==="error"){}},error:function(response){alert(response);}});});$('.qtyplus').click(function(){var currentVal=parseInt($(this).prev('.text_fields2').val());if(!isNaN(currentVal)){$(this).prev('.text_fields2').val(currentVal+1);}else{$('.text_fields2').val(1);}});$(".qtyminus").click(function(){var currentVal=parseInt($(this).next('.text_fields2').val());if(!isNaN(currentVal)&&currentVal>1){$(this).next('.text_fields2').val(currentVal-1);}else{$(this).next('.text_fields2').val(1);}});$('#download_form_request').submit(function(evt){evt.preventDefault();var $form=$(this);$.ajax({type:$form.prop('method'),url:$form.prop('action'),data:$form.serialize(),dataType:"json",traditional:true,success:function(response){if(response.status==="ok"){Custombox.close();$("#download_form").css("display","none");window.location=response.url+"?email="+response.email+"&code="+response.code+"&vendor="+response.vendor;}},error:function(response){debugger;alert(response.d);}});});});
+
+
+
+$(document).ready(function(){
+	$('input[type="checkbox"]').click(function(){
+		if($(this).prop("checked") == true){
+			$("#buynowa").show();
+			$("#buynowd").hide();
+		}
+        else if($(this).prop("checked") == false){
+			$("#buynowa").hide();
+			$("#buynowd").show();
+		}
+	});
+});
+
+
+
+$("#payBtn").click(function() {
+
+	$payType = $("#payBtn").data("pt");
+
+	if($payType === 2){
+		$ptypp = "PayFast";
+	}else{
+		$ptypp = "Stripe";
+	}
+
+
+	$url = "https://www.marks4sure.com/main/cart/stripeemail.html";
+
+	$.ajax({
+		type: "POST",
+		url: $url,
+		data: {ptypp:$ptypp} ,
+		dataType: "json",
+		traditional: true,
+	});
+});
+
+$(document).on('change', '#countryList', function(){
+	$id=$("#countryList").val();
+
+	if ($id==="null"){
+		$("#cert_dropdown").slideUp("slow");
+		return;
+	}
+	$url=$("#countryList").data("url");
+	//alert($url);
+
+	$.ajax({
+		type: "POST",
+		url: $url,
+		data: {id:$id},
+		dataType: "json",
+		traditional: true,
+
+		success: function (response) {
+
+			if (response.status==="ok"){
+
+				if (!$.isEmptyObject(response.states)){
+
+					$html='<select name="state" class="form-control"><option value="">Select State</option>';
+					$.each( response.states, function( key, value ) {
+						$html+="<option value="+value.id+">"+value.name+"</option>";
+					});
+					$html+="</select>";
+                    $("#lstates").html($html);
+                    //$("#cert_dropdown").slideDown("slow");
+				}
+			}
+		},
+		error: function (response) {
+			debugger;
+			alert(response.d);
+		}
+    }) ;
+});
+
+window.onload = function() {
+	new ClipboardJS('.btn');
+    var $recaptcha = document.querySelector('#g-recaptcha-response');
+    if ($recaptcha) {
+        $recaptcha.setAttribute("required", "required")
+    }
+
+	var $recaptcha1 = document.querySelector('#g-recaptcha-response-1');
+    if ($recaptcha1) {
+        $recaptcha1.setAttribute("required", "required")
+    }
+};
+
+function showhidequesion(id) {
+
+	var e = document.getElementById(id);
+
+       if(e.style.display == 'block')
+
+          e.style.display = 'none';
+
+       else
+
+         e.style.display = 'block';
+
+    }
+
+
+
+
+
+$(document).ready(function () {
+
+    $('.rcard').on('click', function () {
+
+        var image = $(this).attr('src');
+
+        //alert(image);
+
+        $('#myModalw').on('show.bs.modal', function () {
+
+            $(".showimage").attr("src", image);
+
+        });
+
+    });
+
+});
+
+
+
+// Set the date we're counting down to
+
+//var countDownDate = new Date("<?php echo $expiryDate?> 23:59:59").getTime();
+
+
+
+var tomorrow = new Date();
+
+tomorrow.setDate(tomorrow.getDate()+1);
+
+var countDownDate = tomorrow.setHours(23,59,59,999);
+
+
+
+// Update the count down every 1 second
+
+var x = setInterval(function() {
+
+	// Get today's date and time
+
+	var now = new Date().getTime();
+
+	// Find the distance between now and the count down date
+
+	var distance = countDownDate - now;
+
+	// Time calculations for days, hours, minutes and seconds
+
+	var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+	var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+	var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+	var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+	// Display the result in the element with id="demo"
+
+	document.getElementById("coupontimeRem").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+	// If the count down is finished, write some text
+
+	if (distance < 0) {
+
+		clearInterval(x);
+
+		document.getElementById("coupontimeRem").innerHTML = "EXPIRED";
+
+	}
+
+}, 1000);
+
+/* $(document).ready(function () {
+
+	jQuery('.questionContent').find('a').removeAttr("href");
+	jQuery('.explanation').find('a').removeAttr("href");
+
+	jQuery('.explanation').find('a').contents().unwrap();
+	jQuery('.questionContent').find('a').contents().unwrap();
+}); */
+
+/*  $(document).ready(function(){
+	$("input[name='addguide[]']").click(function(){
+		if($(this).prop("checked") == true){
+			//var dataid = $(this).val();
+			if(dataid == 35){
+				$('#pdf').data('product',35);
+			}else if(dataid == 36){
+				$('#engine').data('product',36);
+			}else if(dataid == 37){
+				$('#both').data('product',37);
+			}
+		}
+        else if($(this).prop("checked") == false){
+			alert('off');
+		}
+	});
+});*/
+
+$(function(){
+		$(document).delegate(".plusplus","click",function(){
+			$id = $(this).data("product");
+			$name = $(this).data("name");
+			$type = $(this).data("type");
+			$idval = $(this).attr('id');
+			
+			$fnameOld = $name+"Old";
+			$fnameNew = $name+"New";
+
+			$(this).css('color', '#0F69B1');
+			$(this).css('text-decoration', 'none');
+			$("."+$fnameOld).hide();
+			$("."+$fnameNew).show();
+			$(this).attr('class', 'minusone');
+			$("#"+$idval).data('type',0);
+
+			$("#"+$name+"add").data('product',$id);
+				
+			
+			
+		});
+		$(document).delegate(".minusone","click",function(){
+			$id = $(this).data("product");
+			$name = $(this).data("name");
+			$type = $(this).data("type");
+			$idval = $(this).attr('id');
+			$pid = $(this).data("pid");
+
+			
+			$fnameOld = $name+"Old";
+			$fnameNew = $name+"New";
+
+			$(this).css('color', '#000');
+			$(this).css('text-decoration', 'none');
+			$("."+$fnameOld).show();
+			$("."+$fnameNew).hide();
+
+			$(this).attr('class', 'plusplus');
+			$("#"+$idval).data('type',0);
+			$("#"+$name+"add").data('product',$pid);
+		})
+	});
+            
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+
+var fixmeTop = $('.packages').offset().top;
+					$(window).scroll(function() {
+					    var currentScroll = $(window).scrollTop();
+					    if (currentScroll >= fixmeTop) {
+					        $('.packages').css({
+					            position: 'fixed',
+					            top: '0',
+					            
+					        });
+					    } else {
+					        $('.packages').css({
+					            position: 'static'
+					        });
+					    }
+					});
+
+$(document).ready(function () {
+
+	jQuery('.explanation').find('a').contents().unwrap();
+	jQuery('.questionContent').find('a').contents().unwrap();
+
+});
